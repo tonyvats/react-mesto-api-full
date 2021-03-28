@@ -1,0 +1,22 @@
+.popup__field {
+    max-width: 358px;
+    margin-left: 36px;
+}
+
+.popup__field:nth-child(2) {
+    margin: 13px 36px 48px;
+  }   
+
+
+
+
+@media screen and (max-width: 475px) {
+    .popup__field {
+        width: 238px;
+        margin: 15px 22px 25px;
+    }
+
+    .popup__field:nth-child(2) {
+        margin: 15px 22px 25px;
+      }  
+}

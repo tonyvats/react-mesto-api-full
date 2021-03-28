@@ -1,0 +1,16 @@
+
+.popup__tooltip-close-button {
+    background: transparent;
+    border: none;
+    background-size: cover;
+    cursor: pointer;
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 40px;
+    height: 40px;
+}
+
+.popup__tooltip-close-button:hover {
+    opacity: 0.6;
+  }

@@ -1,0 +1,32 @@
+{
+  "name": "mesto-express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "celebrate": "^13.0.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-winston": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.18",
+    "validator": "^13.5.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}

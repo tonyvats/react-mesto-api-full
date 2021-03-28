@@ -1,0 +1,15 @@
+.profile__avatar-icon {
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    border-radius: 50%;
+    object-fit: cover;
+    /* background-image: url(../../../images/avatar.jpg); */
+}
+
+@media screen and (max-width: 730px) {
+    .profile__avatar-icon  {
+        justify-self: center;
+        padding-right: 0px;
+    }
+}

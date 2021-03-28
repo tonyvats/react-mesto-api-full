@@ -1,0 +1,10 @@
+.photo-grid__rectangle {
+    width: 282px;
+    background: #FFFFFF;
+    border-radius: 0 0 10px 10px;
+    margin-top: -4px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;;
+    align-items: center;
+}

@@ -1,0 +1,26 @@
+.profile__info {
+    width: 336px;
+    align-self: center;
+    display: grid;
+    grid-template-areas:
+    "profile_title edit_btn"
+    "profile_subtitle .";
+    padding:0px 246px 0px 30px;
+}
+
+@media screen and (max-width: 900px) {
+    .profile__info {
+        padding: 0px;
+    }
+}
+
+@media screen and (max-width: 730px) {
+    .profile__info {
+        width: 219px;
+        grid-template-areas:
+            "profile_title edit_btn"
+            "profile_subtitle profile_subtitle";
+        grid-gap: 14px;
+        margin-top: 10px;
+    }
+}

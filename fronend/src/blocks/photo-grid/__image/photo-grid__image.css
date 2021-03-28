@@ -1,0 +1,10 @@
+.photo-grid__image {
+    width: 282px;
+    height: 282px;
+    background-size: cover;
+    border-radius: 10px 10px 0 0;
+}
+
+.photo-grid__image:hover {
+    cursor: pointer;
+}
