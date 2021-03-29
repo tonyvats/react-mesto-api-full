@@ -25,28 +25,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-const validateUserSignup = celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-    name: Joi.string(),
-    about: Joi.string(),
-    avatar: Joi.string().custom((url) => {
-      if (!validator.isURL(url)) {
-        throw new CelebrateError('Неверный URL');
-      }
-      return url;
-    }),
-  }),
-});
-
-const validateUserLogin = celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-});
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
@@ -57,20 +35,43 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/signin', validateUserLogin, login);
-app.post('/signup', validateUserSignup, createUser);
+app.post('/signin', celebrate({
+  body: {
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(2),
+  },
+}), login);
+
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(2),
+    name: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/),
+    about: Joi.string().min(2).max(30),
+  }),
+}), createUser);
 
 app.use('/', router);
 app.use(errorLogger);
+
 const allowedCors = [
-  'http://vlg.students.nomoredomains.rocks',
-  'http://api.vlg.students.nomoredomains.rocks',
-  'http://localhost:3001',
+  'http://localhost:3003',
 ];
 app.use(cors({
   origin: allowedCors,
 }));
+
+app.use((req, res, next) => {
+  const { origin } = req.headers;
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  next();
+});
+
 app.use((err, req, res, next) => {
+  console.log(err);
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
 });

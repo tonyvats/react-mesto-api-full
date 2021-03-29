@@ -56,6 +56,11 @@ function App() {
     }
     
     React.useEffect(() => {
+        console.log(currentUser)
+      }, [currentUser])
+
+      
+    React.useEffect(() => {
         handleCheckToken()
     }, [loggedIn])
 
@@ -88,17 +93,18 @@ function App() {
     }
 
     function handleCardLike(card) {
-        const isLiked = card.likes.some((like) => like === currentUser._id);
+        const isLiked = card.likes.some(like => like === currentUser._id);
         api
-          .changeLikeCardStatus(card._id, !isLiked)
-          .then((newCard) => {
-            const newCards = cards.map((item) => (item._id === card._id ? newCard : item));
-            setCards(newCards);
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      }
+            .changeLikeCardStatus(card._id, !isLiked)
+            .then((newCard) => {
+                const newCards = cards.map((item) => (item._id === card._id ? newCard : item));
+                console.log(newCard.data)
+                setCards(newCards);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
 
     function handleCardDelete(card) {
         // Отправляем запрос в API и получаем обновлённые данные карточки
@@ -122,6 +128,7 @@ function App() {
     function handleUpdateAvatar(userData) {
         api.editProfileAvatar(userData.avatar)
             .then(res => {
+                // console.log(res)
                 setCurrentUser(res);
                 closeAllPopups()
         })

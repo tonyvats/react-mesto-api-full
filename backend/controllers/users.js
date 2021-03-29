@@ -38,16 +38,6 @@ const createUser = (req, res, next) => {
       })
       .catch(next);
   });
-  // const { name, about, avatar } = req.body;
-  // return userSchema.create({ name, about, avatar })
-  //   .then((user) => { res.send({ body: user }); })
-  //   .catch((err) => {
-  //     if (err.name === 'ValidationError') {
-  //       res.status(400).send({ message: 'Некорректно введенные данные' });
-  //     } else {
-  //       res.status(500).send({ message: 'Ошибка сервера' });
-  //     }
-  //   });
 };
 
 const updateUser = (req, res) => {
@@ -56,24 +46,29 @@ const updateUser = (req, res) => {
     req.user._id,
     { name: req.body.name, about: req.body.about },
     { new: true })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch(() => res.status(400).send({ message: 'Ошибка при обновлении' }));
 }
 
 const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
+  console.log(avatar)
+  console.log(req.user)
   return userSchema.findByIdAndUpdate(
     req.user._id, 
     { avatar }, 
-    { new: true })
+    { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
       } else {
-        res.status(200).send({ avatar: user.avatar });
+        res.status(200).send(user);
       }
     })
-    .catch(next);
+    .catch((err) => {
+      console.log(err)
+     next(err)
+   })
 };
 
 const login = (req, res) => {

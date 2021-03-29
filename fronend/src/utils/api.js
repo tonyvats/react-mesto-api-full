@@ -12,7 +12,8 @@ class Api {
                 "Content-type": this._contentType,
             },  
             body: JSON.stringify({
-                avatar: avatar
+                // avatar: avatar
+                avatar
             })       
         }).then((res) => {
             if (res.ok) {
@@ -128,7 +129,8 @@ class Api {
             headers: {
                 authorization: `Bearer ${localStorage.getItem("jwt")}`,
                 "Content-type": this._contentType,
-            },         }).then((res) => {
+            },         
+        }).then((res) => {
             if (res.ok) {
                 return res.json();
             }
