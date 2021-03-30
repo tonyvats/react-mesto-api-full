@@ -12,7 +12,6 @@ class Api {
                 "Content-type": this._contentType,
             },  
             body: JSON.stringify({
-                // avatar: avatar
                 avatar
             })       
         }).then((res) => {
