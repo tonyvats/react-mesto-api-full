@@ -41,7 +41,6 @@ const createUser = (req, res, next) => {
 };
 
 const updateUser = (req, res) => {
-  console.log(req.body)
   return userSchema.findByIdAndUpdate(
     req.user._id,
     { name: req.body.name, about: req.body.about },
@@ -52,8 +51,6 @@ const updateUser = (req, res) => {
 
 const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  console.log(avatar)
-  console.log(req.user)
   return userSchema.findByIdAndUpdate(
     req.user._id, 
     { avatar }, 
@@ -79,11 +76,7 @@ const login = (req, res) => {
         token: jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '7d' }),
       });
     })
-    .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
-    });
+    .catch(next);
 };
 
 

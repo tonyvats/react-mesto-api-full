@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import '../index.js';
 import Header from '../components/Header';
@@ -29,13 +29,12 @@ function App() {
     
     const [cards, setCards] = React.useState([])
     const [currentUser,  setCurrentUser] = React.useState({}); 
-    // console.log(currentUser);
 
     const [loggedIn, setLoggedIn] = React.useState(false);
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
     const [email, setEmail] = React.useState('');
     const [isRequestSuccessful, setisRequestSuccessful] = React.useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
 
     function handleCheckToken() {
         const jwt = localStorage.getItem('jwt')
@@ -55,9 +54,9 @@ function App() {
         }
     }
     
-    React.useEffect(() => {
-        console.log(currentUser)
-      }, [currentUser])
+    // React.useEffect(() => {
+    //     console.log(currentUser)
+    //   }, [currentUser])
 
       
     React.useEffect(() => {
@@ -98,7 +97,6 @@ function App() {
             .changeLikeCardStatus(card._id, !isLiked)
             .then((newCard) => {
                 const newCards = cards.map((item) => (item._id === card._id ? newCard : item));
-                console.log(newCard.data)
                 setCards(newCards);
             })
             .catch((err) => {
@@ -107,7 +105,6 @@ function App() {
     }
 
     function handleCardDelete(card) {
-        // Отправляем запрос в API и получаем обновлённые данные карточки
         api.deleteCard(card._id)
             .then(() => {
                 setCards(cards.filter(c => c._id !== card._id));
@@ -116,7 +113,6 @@ function App() {
     }
     
     function handleUpdateUser(userData) {
-        // console.log(userData);
         api.setUserInfoOnServer(userData.name, userData.about)
             .then(res => {
                 setCurrentUser(res);
@@ -128,7 +124,6 @@ function App() {
     function handleUpdateAvatar(userData) {
         api.editProfileAvatar(userData.avatar)
             .then(res => {
-                // console.log(res)
                 setCurrentUser(res);
                 closeAllPopups()
         })
@@ -137,7 +132,6 @@ function App() {
     }
 
     function handleAddPlaceSubmit(cardData) {
-        // console.log(cards);
         api.addCards(cardData.name, cardData.link)
             .then(card => {
                 setCards([card, ...cards]);
@@ -162,7 +156,7 @@ function App() {
     function handleRegister(email, password) {
         auth.register(email, password)
         .then((res) => {
-            if (res.data) {
+            if (res) {
                 setisRequestSuccessful(true);
                 setIsInfoTooltipOpen(true);
                 history.push('/sign-in');
@@ -179,7 +173,6 @@ function App() {
         auth.authorize(email, password)
             .then((res) => {
                 if (res.token) {
-                    setLoggedIn(true);
                     localStorage.setItem('jwt', res.token);
                     setLoggedIn(true);
                     history.push('/')

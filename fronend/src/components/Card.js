@@ -5,8 +5,6 @@ function Card({ card, onCardClick, onCardLike, onDeleteCard }) {
 
     const currentUser = React.useContext(CurrentUserContext);
 
-    // console.log(card.likes)
-
     const isOwn = card.owner === currentUser._id;
     const cardDeleteButtonClassName = (
     `photo-grid__delete-btn ${isOwn ? 'photo-grid__delete-btn_visible' : 'photo-grid__delete-btn_hidden'}`
