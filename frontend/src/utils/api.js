@@ -141,8 +141,8 @@ class Api {
 
 const api = new Api({
     // url: "https://mesto.nomoreparties.co/v1/cohort-18/",
-    // url: "http://localhost:3000/",
-    url: "http://api.vatc.nomoredomains.club/",
+    url: "http://localhost:3000/",
+    // url: "http://api.vatc.nomoredomains.club/",
     // headers: {
     //     "Content-type": "application/json",
     // },
