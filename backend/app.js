@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { login, createUser } = require('./controllers/users.js');
 const router = require('./routes/index');
@@ -14,9 +14,10 @@ const {
 
 const app = express();
 
+// app.use(cors());
+
 const { PORT = 3000 } = process.env;
 
-// app.use(cors());
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -29,16 +30,16 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 const options = {  
   origin: [    
     'http://localhost:3000',
-    'http://vatc.nomoredomains.icu/',
+    'http://vatc.nomoredomains.icu',
     'http://api.vatc.nomoredomains.club',  
-    'https://vatc.nomoredomains.icu/',
+    'https://vatc.nomoredomains.icu',
     'https://api.vatc.nomoredomains.club'  
   ],  
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],  
   preflightContinue: false,  
   optionsSuccessStatus: 204,  
   allowedHeaders: ['Content-Type', 'origin', 'Authorization'],  
-  // credentials: true,
+  credentials: true,
 };
 app.use('*', cors(options));
 
@@ -71,26 +72,6 @@ app.post('/signup', celebrate({
 
 app.use('/', router);
 app.use(errorLogger);
-
-
-// const allowedCors = [
-//   'http://localhost:3000',
-//   'http://vatc.nomoredomains.icu/',
-//   'http://api.vatc.nomoredomains.club'
-// ];
-// app.use(cors({
-//   origin: allowedCors,
-// }));
-
-// app.use((req, res, next) => {
-//   const { origin } = req.headers;
-//   if (allowedCors.includes(origin)) {
-//     res.header('Access-Control-Allow-Origin', origin);
-//   }
-//   next();
-// });
-
-
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
