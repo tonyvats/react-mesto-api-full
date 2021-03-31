@@ -57,7 +57,8 @@ app.use(errorLogger);
 
 const allowedCors = [
   'http://localhost:3000',
-  'http://vatc.nomoredomains.icu/'
+  'http://vatc.nomoredomains.icu/',
+  'http://api.vatc.nomoredomains.club'
 ];
 app.use(cors({
   origin: allowedCors,
