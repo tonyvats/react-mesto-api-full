@@ -55,22 +55,38 @@ app.post('/signup', celebrate({
 app.use('/', router);
 app.use(errorLogger);
 
-const allowedCors = [
+
+const cors = require('cors');
+const options = {  
+origin: [    
   'http://localhost:3000',
   'http://vatc.nomoredomains.icu/',
-  'http://api.vatc.nomoredomains.club'
-];
-app.use(cors({
-  origin: allowedCors,
-}));
+  'http://api.vatc.nomoredomains.club'  
+],  
+methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],  
+preflightContinue: false,  optionsSuccessStatus: 204,  
+allowedHeaders: ['Content-Type', 'origin', 'Authorization'],  
+credentials: true,};
 
-app.use((req, res, next) => {
-  const { origin } = req.headers;
-  if (allowedCors.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  next();
-});
+
+// const allowedCors = [
+//   'http://localhost:3000',
+//   'http://vatc.nomoredomains.icu/',
+//   'http://api.vatc.nomoredomains.club'
+// ];
+// app.use(cors({
+//   origin: allowedCors,
+// }));
+
+// app.use((req, res, next) => {
+//   const { origin } = req.headers;
+//   if (allowedCors.includes(origin)) {
+//     res.header('Access-Control-Allow-Origin', origin);
+//   }
+//   next();
+// });
+
+
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;

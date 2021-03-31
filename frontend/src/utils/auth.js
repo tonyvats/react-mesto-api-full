@@ -16,6 +16,7 @@ export const register = (email, password) => {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ email, password })
     })
     .then((res) => {
@@ -31,6 +32,17 @@ export const register = (email, password) => {
       return res
     })
 }
+
+// signin = (body) => {
+//   return fetch(`${this.baseUrl}/signin`, {      
+//   method: 'POST',      
+//   headers: this.headers,      
+//   credentials: 'include',      
+//   body: JSON.stringify(body),    
+//   })
+//   .then((res) => this._getResolve(res))      
+//   .catch((err) => { throw err });  
+//   }
 
 
 export const authorize = (email, password) => {
