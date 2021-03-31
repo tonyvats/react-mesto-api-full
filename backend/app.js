@@ -15,7 +15,6 @@ const {
 } = require('celebrate');
 
 const app = express();
-app.use('*', cors(options));
 
 const { PORT = 3000 } = process.env;
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -24,6 +23,19 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
+
+const options = {  
+  origin: [    
+    'http://localhost:3000',
+    'http://vatc.nomoredomains.icu/',
+    'http://api.vatc.nomoredomains.club'  
+  ],  
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],  
+  preflightContinue: false,  optionsSuccessStatus: 204,  
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],  
+  credentials: true,
+};
+app.use('*', cors(options));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,19 +66,6 @@ app.post('/signup', celebrate({
 
 app.use('/', router);
 app.use(errorLogger);
-
-
-const cors = require('cors');
-const options = {  
-origin: [    
-  'http://localhost:3000',
-  'http://vatc.nomoredomains.icu/',
-  'http://api.vatc.nomoredomains.club'  
-],  
-methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],  
-preflightContinue: false,  optionsSuccessStatus: 204,  
-allowedHeaders: ['Content-Type', 'origin', 'Authorization'],  
-credentials: true,};
 
 
 // const allowedCors = [
