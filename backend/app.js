@@ -8,10 +8,8 @@ const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const {
-  errors,
   celebrate,
   Joi,
-  CelebrateError,
 } = require('celebrate');
 
 const app = express();
