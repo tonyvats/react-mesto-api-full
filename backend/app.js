@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const express = require('express');
 const mongoose = require('mongoose');
-// const cors = require('cors');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const { login, createUser } = require('./controllers/users.js');
 const router = require('./routes/index');
@@ -15,7 +15,7 @@ const {
 } = require('celebrate');
 
 const app = express();
-// app.use(cors());
+app.use(cors());
 
 const { PORT = 3000 } = process.env;
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -55,12 +55,13 @@ app.post('/signup', celebrate({
 app.use('/', router);
 app.use(errorLogger);
 
-// const allowedCors = [
-//   'http://localhost:3003',
-// ];
-// app.use(cors({
-//   origin: allowedCors,
-// }));
+const allowedCors = [
+  'http://localhost:3000',
+  'http://vatc.nomoredomains.icu/'
+];
+app.use(cors({
+  origin: allowedCors,
+}));
 
 app.use((req, res, next) => {
   const { origin } = req.headers;
