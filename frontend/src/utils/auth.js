@@ -1,6 +1,6 @@
 // export const BASE_URL = 'https://auth.nomoreparties.co';
-export const BASE_URL = 'http://localhost:3000';
-// export const BASE_URL = 'http://api.vatc.nomoredomains.club';
+// export const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'http://vatc.nomoredomains.club';
 
 
 const checkResponse = (response) => response.ok
