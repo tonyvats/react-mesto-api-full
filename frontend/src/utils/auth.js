@@ -1,7 +1,9 @@
 // export const BASE_URL = 'https://auth.nomoreparties.co';
 // export const BASE_URL = 'http://localhost:3000';
 // export const BASE_URL = 'http://vatc.nomoredomains.icu';
-export const BASE_URL = 'https://api.vatc.nomoredomains.club';
+// export const BASE_URL = 'https://api.vatc.nomoredomains.club';
+export const BASE_URL= `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3000'}`;
+
 
 
 const checkResponse = (response) => response.ok

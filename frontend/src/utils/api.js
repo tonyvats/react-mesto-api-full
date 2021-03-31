@@ -143,7 +143,8 @@ const api = new Api({
     // url: "https://mesto.nomoreparties.co/v1/cohort-18/",
     // url: "http://localhost:3000/",
     // url: "http://vatc.nomoredomains.icu/",
-    url: "https://api.vatc.nomoredomains.club/",
+    // url: "https://api.vatc.nomoredomains.club/",
+    url: `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3000/'}`,
     headers: {
         "Content-type": "application/json",
     },

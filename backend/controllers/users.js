@@ -42,6 +42,20 @@ const createUser = (req, res, next) => {
   });
 };
 
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+  return userSchema.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id }, 
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', 
+        { expiresIn: '7d' }
+      );
+      res.send({ token });
+    })
+    .catch(next);
+};
+
 const updateUser = (req, res) => {
   return userSchema.findByIdAndUpdate(
     req.user._id,
@@ -69,21 +83,6 @@ const updateAvatar = (req, res, next) => {
      next(err)
    })
 };
-
-const login = (req, res, next) => {
-  const { email, password } = req.body;
-  return userSchema.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id }, 
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', 
-        { expiresIn: '7d' }
-      );
-      res.send({ token });
-    })
-    .catch(next);
-};
-
 
 module.exports = {
   getUsers,
