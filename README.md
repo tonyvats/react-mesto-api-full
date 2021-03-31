@@ -12,3 +12,7 @@
 
 `npm run start` — запускает сервер   
 `npm run dev` — запускает сервер с hot-reload
+
+Ссылки:
+Фронтенд - https://vatc.nomoredomains.icu
+Бекенд - https://api.vatc.nomoredomains.club
