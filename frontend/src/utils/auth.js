@@ -54,6 +54,9 @@ export const authorize = (email, password) => {
       }
       return res.json()
   })
+  .then((res) => {
+    return res
+  })
 }
 
 export const getContent = (token) => {

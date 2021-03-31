@@ -12,18 +12,18 @@ const {
   updateAvatar
 } = require('../controllers/users');
 
-const validateId = celebrate({
-  params: Joi.object().keys({
-    _id: Joi.string().alphanum().length(24),
-  }),
-});
+// const validateId = celebrate({
+//   params: Joi.object().keys({
+//     _id: Joi.string().alphanum().length(24),
+//   }),
+// });
 
-const validateUserUpdate = celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    about: Joi.string().required().min(2).max(30),
-  }),
-});
+// const validateUserUpdate = celebrate({
+//   body: Joi.object().keys({
+//     name: Joi.string().required().min(2).max(30),
+//     about: Joi.string().required().min(2).max(30),
+//   }),
+// });
 
 router.get('/users', auth, getUsers);
 router.get('/users/me', auth, getUserMe);
