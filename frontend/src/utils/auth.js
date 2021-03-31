@@ -33,18 +33,6 @@ export const register = (email, password) => {
     })
 }
 
-// signin = (body) => {
-//   return fetch(`${this.baseUrl}/signin`, {      
-//   method: 'POST',      
-//   headers: this.headers,      
-//   credentials: 'include',      
-//   body: JSON.stringify(body),    
-//   })
-//   .then((res) => this._getResolve(res))      
-//   .catch((err) => { throw err });  
-//   }
-
-
 export const authorize = (email, password) => {
     return fetch(`${BASE_URL}/signin`, {
         method: 'POST',
