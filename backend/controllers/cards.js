@@ -52,7 +52,7 @@ const likeCard = (req, res, next) => {
 const dislikeCard = (req, res, next) => {
   cardSchema.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
+    { $pull: { likes: req.user._id } },
     { new: true },
   )
     .catch(() => {
