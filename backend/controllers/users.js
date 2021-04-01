@@ -5,83 +5,109 @@ const jwt = require('jsonwebtoken');
 const userSchema = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
+const BadRequestErr = require('../errors/BadRequestError');
 
-const getUsers = (req, res, next) => {
-  return userSchema.find({})
-    .then((data) => res.status(200).send(data))
-    .catch(next);
-};
+const getUsers = (req, res, next) => userSchema.find({})
+  .then((data) => res.send(data))
+  .catch(next);
 
 const getUserById = (req, res, next) => {
-  return userSchema.findById(req.params.id)
-    .orFail(new NotFoundError('Нет пользователя с таким id'))
-    .then((user) => res.status(200).send(user))
+  userSchema.findById(req.params._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Нет пользователя с таким id');
+      } else {
+        res.send(user);
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        throw new BadRequestErr('Введен невалидный id пользователя');
+      }
+      return next(err);
+    })
     .catch(next);
 };
-const getUserMe = (req, res, next) => {
-  return userSchema.findById(req.user._id)
-    .orFail(new NotFoundError('Нет пользователя с таким id'))
-    .then((user) => res.status(200).send(user))
-    .catch(next);
-};
+
+const getUserMe = (req, res, next) => userSchema.findById(req.user._id)
+  .catch(() => {
+    throw new NotFoundError('Пользователь с таким id не найден');
+  })
+  .then((user) => res.send(user))
+  .catch(next);
 
 const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  bcrypt.hash(password, 10, (error, hash) => {
-    return userSchema.findOne({ email })
-      .then((user) => {
-        if (user) return next(new ConflictError('Пользователь уже существует'));
-        return userSchema.create({
-          name, about, avatar, email, password: hash,
-        })
-          .then((newUser) => res.status(200).send(newUser));
-      })
-      .catch(next);
-  });
-};
 
-const login = (req, res, next) => {
-  const { email, password } = req.body;
-  return userSchema.findUserByCredentials(email, password)
+  userSchema.findOne({ email })
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id }, 
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', 
-        { expiresIn: '7d' }
-      );
-      res.send({ token });
+      if (!(user === null)) throw new ConflictError('Пользователь с таким email зарегестрирован');
+    })
+    .then(() => bcrypt.hash(password, 10))
+    .then((hash) => userSchema.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
+    .then((user) => {
+      res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
     .catch(next);
 };
 
-const updateUser = (req, res) => {
-  return userSchema.findByIdAndUpdate(
-    req.user._id,
-    { name: req.body.name, about: req.body.about },
-    { new: true })
-    .then((user) => res.send(user))
-    .catch(() => res.status(400).send({ message: 'Ошибка при обновлении' }));
-}
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    next(new UnauthorizedError('Введены неверное имя или пароль'));
+  }
+
+  return userSchema.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
+      );
+      res.send({ token });
+    })
+    .catch(() => next(new UnauthorizedError('Введены неверное имя или пароль')))
+    .catch((next));
+};
+
+const updateUser = (req, res, next) => userSchema.findByIdAndUpdate(
+  req.user._id,
+  { name: req.body.name, about: req.body.about },
+  { new: true, runValidators: true },
+)
+  .catch(() => {
+    throw new NotFoundError('Пользователь с таким id не найден');
+  })
+  .then((user) => res.send(user))
+  .catch(next);
 
 const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   return userSchema.findByIdAndUpdate(
-    req.user._id, 
-    { avatar }, 
-    { new: true, runValidators: true })
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
-      } else {
-        res.status(200).send(user);
-      }
+    req.user._id,
+    { avatar },
+    { new: true, runValidators: true },
+  )
+    .catch(() => {
+      throw new NotFoundError('Пользователь с таким id не найден');
     })
-    .catch((err) => {
-      console.log(err)
-     next(err)
-   })
+    .then((user) => res.send(user))
+    .catch(next);
 };
 
 module.exports = {
@@ -91,5 +117,5 @@ module.exports = {
   login,
   getUserMe,
   updateUser,
-  updateAvatar
+  updateAvatar,
 };

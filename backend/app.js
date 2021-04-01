@@ -9,10 +9,7 @@ const { login, createUser } = require('./controllers/users.js');
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const {
-  celebrate,
-  Joi,
-} = require('celebrate');
+const { celebrate, Joi, errors} = require('celebrate');
 
 const app = express();
 
@@ -27,24 +24,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
-
-
-// const options = {  
-//   origin: [    
-//     'http://localhost:3000',
-//     'http://vatc.nomoredomains.icu',
-//     'http://api.vatc.nomoredomains.club',  
-//     'https://vatc.nomoredomains.icu',
-//     'https://api.vatc.nomoredomains.club'  
-//   ],  
-//   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],  
-//   preflightContinue: false,  
-//   optionsSuccessStatus: 204,  
-//   allowedHeaders: ['Content-Type', 'origin', 'Authorization'],  
-//   credentials: true,
-// };
-
-// app.use('*', cors(options));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -76,8 +55,9 @@ app.post('/signup', celebrate({
 app.use('/', router);
 app.use(errorLogger);
 
+app.use(errors());
 app.use((err, req, res, next) => {
-  // console.log(err);
+  console.log(err);
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
 });

@@ -9,7 +9,6 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import ImagePopup from './ImagePopup';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-// import api from '../utils/api';
 import api from '../utils/api';
 import ProtectedRoute from './ProtectedRoute';
 import Login from './Login';
@@ -34,7 +33,6 @@ function App() {
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
     const [email, setEmail] = React.useState('');
     const [isRequestSuccessful, setisRequestSuccessful] = React.useState(false);
-    // const [isLoading, setIsLoading] = useState(false);
 
     function handleCheckToken() {
         const jwt = localStorage.getItem('jwt')
@@ -48,17 +46,18 @@ function App() {
                     history.push('/')
                 }
             })
+            .then(() => {
+                api.getCardsInformation()
+                .then((res) => {
+                    setCards(res);
+                })
+            })
             .catch((err) => {
               console.log(err)
             })
         }
     }
-    
-    // React.useEffect(() => {
-    //     console.log(currentUser)
-    //   }, [currentUser])
-
-      
+ 
     React.useEffect(() => {
         handleCheckToken()
     }, [loggedIn])
