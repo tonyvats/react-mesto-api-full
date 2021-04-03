@@ -23,49 +23,77 @@ const postCards = (req, res, next) => {
       throw new BadRequestError('Переданы некорректные данные');
     })
     .then((card) => res.send(card))
-    .catch(next)
+    .catch(next);
 };
 
 const deleteCard = (req, res, next) => {
   const id = req.params.cardId;
-  return cardSchema.findByIdAndRemove(id)
-    .catch(() => {
-      throw new NotFoundError('Такой карточки нет');
+
+  return cardSchema.findById(id)
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Такой карточки нет');
+      } else if (card.owner.toString() !== req.user._id) {
+        throw new ForbiddenError('Вы можете удалять только свои карточки');
+      }
+
+      cardSchema.findByIdAndDelete(req.params.cardId)
+        .then((deletedCard) => res.status(200).send(deletedCard));
     })
-    .then((card) => res.send(card))
-    .catch(next)
-}
+    .catch(next);
+};
 
 const likeCard = (req, res, next) => {
-  cardSchema.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  )
-    .catch(() => {
-      throw new NotFoundError('Такой карточки нет');
+  cardSchema.findById(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Такой карточки нет');
+      }
+
+      cardSchema.findByIdAndUpdate(
+        req.params.cardId,
+        { $addToSet: { likes: req.user._id } },
+        { new: true },
+      )
+        .then((updatedCard) => {
+          res.status(200).send(updatedCard);
+        })
+        .catch((err) => {
+          if (err.name === 'CastError') {
+            throw new BadRequestError('Введен невалидный id карточки');
+          }
+        });
     })
-    .then((card) => res.send(card))
-    .catch(next)
-}
+    .catch(next);
+};
 
 const dislikeCard = (req, res, next) => {
-  cardSchema.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true },
-  )
-    .catch(() => {
-      throw new NotFoundError('Такой карточки нет');
+  cardSchema.findById(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Такой карточки нет');
+      }
+      cardSchema.findByIdAndUpdate(
+        req.params.cardId,
+        { $pull: { likes: req.user._id } },
+        { new: true },
+      )
+        .then((updatedCard) => {
+          res.status(200).send(updatedCard);
+        })
+        .catch((err) => {
+          if (err.name === 'CastError') {
+            throw new BadRequestError('Введен невалидный id карточки');
+          }
+        });
     })
-    .then((card) => res.send(card))
-    .catch(next)
-}
+    .catch(next);
+};
 
 module.exports = {
   getCards,
   postCards,
   deleteCard,
   likeCard,
-  dislikeCard
+  dislikeCard,
 };

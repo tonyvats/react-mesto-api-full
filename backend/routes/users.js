@@ -4,12 +4,11 @@ const auth = require('../middlewares/auth');
 
 const {
   getUsers,
-  getUserById, 
+  getUserById,
   getUserMe,
   updateUser,
-  updateAvatar
+  updateAvatar,
 } = require('../controllers/users');
-
 
 router.get('/users', auth, getUsers);
 router.get('/users/me', auth, getUserMe);
@@ -30,4 +29,3 @@ router.patch('/users/me/avatar', auth, celebrate({
 }), updateAvatar);
 
 module.exports = router;
-
